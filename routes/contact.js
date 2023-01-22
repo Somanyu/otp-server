@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const contact = require('../data/contact');
 const Message = require("../model/Message");
+const crypto = require('crypto');
 
 router.get('/', (req, res) => {
     return res.status(200).json(contact)
@@ -34,13 +35,16 @@ router.get('/info/:id', (req, res) => {
 
 })
 
+// Using crypto module to generate more secure random number.
 const generateRandom = () => {
-    const random = Math.floor(100000 + Math.random() * 900000);
-    return random
+    const min = 100000;
+    const max = 999999;
+    const randomBytes = crypto.randomBytes(2);
+    const randomNumber = (randomBytes.readUInt16BE() % (max - min + 1)) + min;
+    return randomNumber;
 }
 
-// // JSON data of OTP messages sent
-// var messageList = []
+
 
 router.post('/otp', async (req, res) => {
     const accountSID = process.env.TWILIO_ACCOUNT_SID
