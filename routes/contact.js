@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const contact = require('../data/contact')
+const contact = require('../data/contact');
+const Message = require("../model/Message");
 
 router.get('/', (req, res) => {
     return res.status(200).json(contact)
@@ -27,8 +28,8 @@ const generateRandom = () => {
     return random
 }
 
-// JSON data of OTP messages sent
-var messageList = []
+// // JSON data of OTP messages sent
+// var messageList = []
 
 router.post('/otp', async (req, res) => {
     const accountSID = process.env.TWILIO_ACCOUNT_SID
@@ -47,21 +48,17 @@ router.post('/otp', async (req, res) => {
             body: `Hi ${contact.firstName}, your OTP is: ${OTP}`,
             from: '+14094032787',
             to: `${contact.phone}`
-        }).then(message => {
+        }).then(async message => {
 
-            // function to push item with OTP details.
-            function addData(newData) {
-                messageList.push(newData);
-            }
-
-            // JSON data with name, OTP, time
+            // JSON data with name and OTP message
             var data = {
-                "name": contact.firstName,
-                "OTP": OTP,
-                "time": new Date(),
+                name: contact.firstName,
+                OTP: OTP,
             }
-            addData(data)
-            console.log(messageList)
+
+            // Insert data in mongodb
+            const msg = new Message(data);
+            await msg.save()
 
             console.log(`✅ Message sent. ${message.sid}`);
             return res.status(200).send({ success: "Success" })
