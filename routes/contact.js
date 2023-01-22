@@ -73,4 +73,10 @@ router.post('/otp', async (req, res) => {
 
 })
 
+router.get('/getlist', async (req, res) => {
+    let msgList = await Message.find({})
+    // console.log(msgList);
+    return res.status(200).json(msgList);
+})
+
 module.exports = router;
