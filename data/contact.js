@@ -34,6 +34,13 @@ const contact = [
         "firstName": "Somanyu",
         "lastName": "Samal",
         "phone": "+916370112909"
+    },
+    {
+        "id": 7,
+        "firstName": "Tony",
+        "lastName": "Stark",
+        "phone": "+917436823392"
+        
     }
 ]
 

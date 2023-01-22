@@ -8,24 +8,27 @@ router.get('/', (req, res) => {
 
 router.get('/info/:id', (req, res) => {
     const contactID = req.params.id;
-    
+
     // Find the user in the data store
     const contactDetails = contact.find(contact => contact.id === Number(contactID));
-    if(contactDetails) {
-        
+    if (contactDetails) {
+
         // Store contactDetails in locals in context to app
         req.app.locals.contactDetails = contactDetails
         return res.status(200).json(contactDetails);
     } else {
-        return res.status(404).json({message: "Contact not found"})
+        return res.status(404).json({ message: "Contact not found" })
     }
 
 })
 
-const generateRandom=()=>{
+const generateRandom = () => {
     const random = Math.floor(100000 + Math.random() * 900000);
     return random
 }
+
+// JSON data of OTP messages sent
+var messageList = []
 
 router.post('/otp', async (req, res) => {
     const accountSID = process.env.TWILIO_ACCOUNT_SID
@@ -45,15 +48,30 @@ router.post('/otp', async (req, res) => {
             from: '+14094032787',
             to: `${contact.phone}`
         }).then(message => {
+
+            // function to push item with OTP details.
+            function addData(newData) {
+                messageList.push(newData);
+            }
+
+            // JSON data with name, OTP, time
+            var data = {
+                "name": contact.firstName,
+                "OTP": OTP,
+                "time": new Date(),
+            }
+            addData(data)
+            console.log(messageList)
+
             console.log(`✅ Message sent. ${message.sid}`);
-            return res.status(200).send({success: "Success"})
-        }).catch (error => {
-            console.log(`❌ Message not sent. ${error} `)
-            return res.status(500).send({message: "Something went wrong"})
+            return res.status(200).send({ success: "Success" })
+        }).catch(error => {
+            console.log(`❌ 1Message not sent. ${error} `)
+            return res.status(500).send({ message: "Something went wrong" })
         })
     } catch (error) {
         console.log(`❌ Message not sent. ${error} `)
-        return res.status(500).send({message: "Something went wrong"})
+        return res.status(500).send({ message: "Something went wrong" })
     }
 
 })
