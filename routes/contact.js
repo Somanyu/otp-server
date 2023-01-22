@@ -8,17 +8,28 @@ router.get('/', (req, res) => {
 });
 
 router.get('/info/:id', (req, res) => {
-    const contactID = req.params.id;
+    // fetch "id" from URL param
+    const contactID = parseInt(req.params.id);
 
-    // Find the user in the data store
-    const contactDetails = contact.find(contact => contact.id === Number(contactID));
-    if (contactDetails) {
+    // validate id is a number
+    if (!Number.isInteger(contactID)) {
+        // console.log(typeof contactID);
+        return res.status(404).json({ message: "Invalid ID" });
+    }
 
-        // Store contactDetails in locals in context to app
-        req.app.locals.contactDetails = contactDetails
-        return res.status(200).json(contactDetails);
-    } else {
-        return res.status(404).json({ message: "Contact not found" })
+    try {
+        // Find the user in the data store
+        const contactDetails = contact.find(contact => contact.id === Number(contactID));
+        if (contactDetails) {
+
+            // Store contactDetails in locals in context to app
+            req.app.locals.contactDetails = contactDetails
+            return res.status(200).json(contactDetails);
+        } else {
+            return res.status(404).json({ message: "Contact not found" })
+        }
+    } catch (error) {
+        return res.status(500).json({ message: "Error in server" });
     }
 
 })
