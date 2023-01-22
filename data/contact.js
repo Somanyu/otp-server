@@ -1,4 +1,4 @@
-[
+const contact = [
     {
         "id": 1,
         "firstName": "John",
@@ -36,3 +36,5 @@
         "phone": "+916370112909"
     }
 ]
+
+module.exports = contact;

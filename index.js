@@ -11,8 +11,8 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const messageRouter = require('./routes/message');
-app.use('/message', messageRouter);
+const contactRouter = require('./routes/contact');
+app.use('/contact', contactRouter);
 
 app.listen(process.env.PORT, () => {
     console.log(`App listening on at http://localhost:${process.env.PORT}`);
