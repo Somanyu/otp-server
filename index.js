@@ -9,6 +9,7 @@ const app = express();
 dotenv.config({ path: './.env' });
 
 mongoose.set('strictQuery', false);
+
 // MongoDB connection setup
 mongoose.connect(process.env.MONGODB_CONNECT,
     { useNewUrlParser: true }, (err) => {
@@ -24,6 +25,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// Routes
 const contactRouter = require('./routes/contact');
 app.use('/contact', contactRouter);
 
